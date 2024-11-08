@@ -1,0 +1,30 @@
+services:
+  fastapi:
+    build: .
+    container_name: fastapi_container
+    ports:
+      - "8181:8181"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=mysql+pymysql://root:password@db/dbname
+
+  db:
+    image: mysql:5.7
+    container_name: mysql_container
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: dbname
+    ports:
+      - "3306:3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin_container
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - "8282:80"
+    depends_on:
+      - db
